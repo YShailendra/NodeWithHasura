@@ -1,0 +1,28 @@
+
+type Query {
+  findUsersByPage(
+    pageSize: Int
+    page: Int
+  ): [FindUserByPageOutput]
+}
+
+type FindUserByPageOutput {
+  first_name: String!
+  gender: String
+  id: Int!
+  last_name: String
+}
+type Query {
+  findUsersInRadius(
+    radius: Int
+  ): [FindUsersInRadiusOutput]
+}
+
+type FindUsersInRadiusOutput {
+  first_name: String!
+  gender: String
+  id: Int!
+  last_name: String
+  lat:numeric
+  lng:numeric
+}

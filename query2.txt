@@ -1,0 +1,33 @@
+select user_id, ST_Distance(tracking.geo_location,locfrom.geo_location) 
+as distance from user_tracking as tracking, 
+lateral(select id,geo_location
+from user_tracking as ut where ut.id = 1) 
+as locfrom
+where tracking.id!=1
+CREATE OR REPLACE FUNCTION public.getusers(lat double precision, long double precision, bound integer)
+ RETURNS SETOF users
+ LANGUAGE sql
+ STABLE
+AS $function$
+    SELECT * from users as user join user_tracking as ut on ut.user_id=user.id 
+        WHERE ST_DWITHIN(way, ST_TRANSFORM(ST_SetSRID(ST_Point(long, lat),4326), 3857), bound);
+$function$
+
+****************************************
+CREATE OR REPLACE FUNCTION public.getusers(lat double precision, long double precision, bound integer)
+ RETURNS TABLE(id int, firstName text, lastName text,gender text,distance numeric)
+ LANGUAGE sql
+ STABLE
+AS $function$
+    SELECT 
+    id,
+    first_name,
+    last_name,
+    gender,
+    ST_Distance(ut.geo_location,ST_SetSRID(ST_Point(long, lat),4326))/1000 as distance
+    from user as ur 
+    INNER JOIN user_tracking as ut on ut.user_id = ur.id
+    where (ST_Distance(ut.geo_location,ST_SetSRID(ST_Point(long, lat),4326))/1000)<bound;
+$function$
+
+double precision

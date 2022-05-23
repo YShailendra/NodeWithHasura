@@ -1,0 +1,16 @@
+actions:
+    - name: findUsersByPage
+      definition:
+        kind: synchronous
+        handler: http://localhost:3000/findUsersByPage
+    - name: findUsersInRadius
+      definition:
+        kind: synchronous
+        handler: http://localhost:3000/findUsersInRadius
+custom_types:
+    enums: []
+    input_objects: []
+    objects:
+        - name: FindUserByPageOutput
+        - name: FindUsersInRadiusOutput
+    scalars: []
